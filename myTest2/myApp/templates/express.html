@@ -1,0 +1,19 @@
+{% extends 'base1.html' %}
+{% block content_block %}
+    <div>
+         <form action="{% url 'express' %}" method="POST">   <!--获取数据-->
+                         {% csrf_token %}
+                         {{express_form.postid}}  <!--提交后吧postid放在url后面-->
+                        <input type="submit" value="提交" id="click">
+        </form>
+    </div>
+<div id="showcontent">
+<li>快递单号：{{postid}}</li>
+{%for x in content%}
+<li> 时间：{{x.time}} 物流情况：{{x.context}}</li>
+{%endfor%}
+</div>
+</body>
+</html>
+
+{% endblock %}

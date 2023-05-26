@@ -1,0 +1,225 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>家具购物网站</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Custom Theme files -->
+    <!--theme-style-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!--//theme-style-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Fashion Mania Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- start menu -->
+    <link href="{% static 'css/memenu.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" src="{% static 'js/memenu.js' %}"></script>
+    <script>$(document).ready(function(){$(".memenu").memenu();});</script>
+    <script src="{% static 'js/simpleCart.min.js' %}"> </script>
+    <!-- slide -->
+    <script src="{% static 'js/responsiveslides.min.js' %}"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                speed: 500,
+                namespace: "callbacks",
+                pager: true
+            });
+        });
+    </script>
+</head>
+<body>
+<!--header-->
+
+<div class="header">
+<div class="header-top">
+    <div class="container">
+        <div class="col-sm-4 world">
+        </div>
+        <div class="col-sm-4 logo">
+            <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" alt=""></a>
+        </div>
+
+        <div class="col-sm-4 header-left">
+            {% if not request.user.is_authenticated %}
+                <p class="log"><a href="{% url 'login' %}"  >登录</a>
+                <span>|</span>
+                <a  href="{% url 'register' %}"  >注册</a></p>
+            {% else %}
+                <p class="log"><a href="{% url 'show_order' %}"  >{{ request.user.username }}</a>
+                <span>|</span>
+                <a  href="{% url 'logout' %}"  >退出</a></p>
+            {% endif %}
+                 <span></span>
+            <p class="log"><a href="{% url 'express' %}"  >快递查询</a>
+            <div class="cart box_1">
+                <a href="{% url 'view_cart' %}">   <!--点击金额和购物车的图标都可以查看购物车-->
+                    <h3>
+                        <div class="total">
+                            {% if request.user.is_authenticated %}  <!--用户是否认证登录-->
+                                {% if cart.total_price %}   <!--购物车总额不为空显示总额-->
+                                    <span>{{ cart.total_price }}元</span>
+                                {% else %}  <!--购物车总额为空显示0.0元-->
+                                    <span>0.0元</span>
+                                {% endif %}
+                            {% else %}   <!--没有登录也显示0.0元-->
+                                <span>0.0元</span>
+                            {% endif %}
+                        </div>
+                        <img src="{% static 'images/cart.png' %}" alt=""/>
+                    </h3>
+                </a>
+                <p><a href="{% url 'clean_cart' %}" class="simpleCart_empty">清空购物车</a></p>
+
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<div class="container">
+    <div class="head-top">
+        <div class="col-sm-2 number">
+        </div>
+        <div class="col-sm-8 h_menu4">
+            <ul class="memenu skyblue">
+                <li class=" grid"><a  href="{% url 'index' %}">主页</a></li>
+                <li><a  href="#">分类</a>
+                    <div class="mepanel">
+                        <div class="row">
+                            <div class="col1">
+                                <div class="h_nav">
+                                    <h4>客厅</h4>
+                                    <ul>
+                                        {% for ca in category_list %}  <!--weast_east=0的分类，即中式的所有分类-->
+                                            {% if ca.typ == '客厅' %}  <!--中式中typ为原木的-->
+                                                <li><a href="{% url 'products' %}?cid={{ ca.id }}">{{ ca.name }}</a></li><!--显示链接，并把该分类的id号放进url-->
+                                            {% endif %}
+                                            {% empty %}
+                                             <li>抱歉，列表为空</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="h_nav">
+                                    <h4>卧室</h4>
+                                    <ul>
+                                        {% for ca in category_list %}
+                                            {% if ca.typ == '卧室' %}
+                                                <li><a href="{% url 'products' %}?cid={{ ca.id }}">{{ ca.name }}</a></li>
+                                            {% endif %}
+                                        {% empty %}
+                                             <li>抱歉，列表为空</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                             <div class="col1">
+                                <div class="h_nav">
+                                    <h4>餐厅/书房</h4>
+                                    <ul>
+                                        {% for ca in category_list %}
+                                            {% if ca.typ == '餐厅/书房' %}
+                                                <li><a href="{% url 'products' %}?cid={{ ca.id }}">{{ ca.name }}</a></li>
+                                            {% endif %}
+                                        {% empty %}
+                                             <li>抱歉，列表为空</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="grid"><a  href="#">特色专场</a>
+                    <div class="mepanel">
+                        <div class="row">
+                            <div class="col1">
+                                <div class="h_nav">
+                                    <h4>品牌馆</h4>
+                                    <ul>
+                                        {% for brand in brand_list %}
+                                            <li><a href="{% url 'brands' %}?bid={{ brand.id }}">{{ brand.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="h_nav">
+                                    <h4>风格馆</h4>
+                                    <ul>
+                                        {% for tag in tag_list %}
+                                            <li><a href="{% url 'tags' %}?tid={{ tag.id }}">{{ tag.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="h_nav">
+                                    <h4>成套家具</h4>
+                                    <ul>
+                                        {% for ca in category_list %}
+                                            {% if ca.typ == '成套' %}
+                                                <li><a href="{% url 'products' %}?cid={{ ca.id }}">{{ ca.name }}</a></li>
+                                            {% endif %}
+                                        {% empty %}
+                                             <li>抱歉，列表为空</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"> </div>
+        <!---pop-up-box---->
+{#        <script type="text/javascript" src="js/modernizr.custom.min.js"></script>#}
+        <link href="{% static 'css/popuo-box.css' %}" rel="stylesheet" type="text/css" media="all"/>
+        <script src="{% static 'js/jquery.magnific-popup.js' %}" type="text/javascript"></script>
+        <!---//pop-up-box---->
+        <script>
+            $(document).ready(function() {
+                $('.popup-with-zoom-anim').magnificPopup({
+                    type: 'inline',
+                    fixedContentPos: false,
+                    fixedBgPos: true,
+                    overflowY: 'auto',
+                    closeBtnInside: true,
+                    preloader: false,
+                    midClick: true,
+                    removalDelay: 300,
+                    mainClass: 'my-mfp-zoom-in'
+                });
+
+            });
+        </script>
+        <!---->
+    </div>
+</div>
+</div>
+<!--banner-->
+{% block banner_block %}{% endblock %}
+<!--//banner-->
+<!--content-->
+{% block content_block %}{% endblock %}
+<!--//content-->
+<!--footer-->
+<div class="footer">
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="clearfix"> </div>
+            <p class="footer-class">Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="#">购物网站</a></p>
+        </div>
+    </div>
+</div>
+<!--//footer-->
+</body>
+</html>

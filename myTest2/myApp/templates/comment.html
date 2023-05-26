@@ -1,0 +1,147 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Custom Theme files -->
+    <!--theme-style-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <!--//theme-style-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Fashion Mania Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- start menu -->
+    <link href="{% static 'css/memenu.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" src="{% static 'js/memenu.js' %}"></script>
+    <script>$(document).ready(function(){$(".memenu").memenu();});</script>
+    <script src="{% static 'js/simpleCart.min.js' %}"> </script>
+    <!-- slide -->
+    <script src="{% static 'js/responsiveslides.min.js' %}"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                speed: 500,
+                namespace: "callbacks",
+                pager: true
+            });
+        });
+    </script>
+<style type="text/css">
+.table
+{
+width: 100%;
+padding: 0;
+margin: 0;
+}
+th {
+font: bold 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+color: #4f6b72;
+border-right: 1px solid #C1DAD7;
+border-bottom: 1px solid #C1DAD7;
+border-top: 1px solid #C1DAD7;
+letter-spacing: 2px;
+text-transform: uppercase;
+text-align: left;
+padding: 6px 6px 6px 12px;
+background: #CAE8EA no-repeat;
+}
+td {
+border-right: 1px solid #C1DAD7;
+border-bottom: 1px solid #C1DAD7;
+background: #fff;
+font-size:14px;
+padding: 6px 6px 6px 12px;
+color: #4f6b72;
+}
+td.alt {
+background: #F5FAFA;
+color: #797268;
+}
+th.spec,td.spec {
+border-left: 1px solid #C1DAD7;
+}
+/*---------for IE 5.x bug*/
+html>body td{ font-size:14px;}
+tr.select th,tr.select td
+{
+background-color:#CAE8EA;
+color: #797268;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-top">
+    <div class="container">
+        <div class="col-sm-4 world">
+        </div>
+        <div class="col-sm-4 logo">
+            <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" alt=""></a>
+        </div>
+
+        <div class="col-sm-4 header-left">
+            {% if not request.user.is_authenticated %}
+                <p class="log"><a href="{% url 'login' %}"  >登录</a>
+                <span>|</span>
+                <a  href="{% url 'register' %}"  >注册</a></p>
+            {% else %}
+                <p class="log"><a href="{% url 'show_order' %}"  >{{ request.user.username }}</a>
+                <span>|</span>
+                <a  href="{% url 'logout' %}"  >退出</a></p>
+            {% endif %}
+                 <span></span>
+            <p class="log"><a href="{% url 'express' %}"  >快递查询</a>
+            <div class="cart box_1">
+                <a href="{% url 'view_cart' %}">   <!--点击金额和购物车的图标都可以查看购物车-->
+                    <h3>
+                        <div class="total">
+                            {% if request.user.is_authenticated %}  <!--用户是否认证登录-->
+                                {% if cart.total_price %}   <!--购物车总额不为空显示总额-->
+                                    <span>{{ cart.total_price }}元</span>
+                                {% else %}  <!--购物车总额为空显示0.0元-->
+                                    <span>0.0元</span>
+                                {% endif %}
+                            {% else %}   <!--没有登录也显示0.0元-->
+                                <span>0.0元</span>
+                            {% endif %}
+                        </div>
+                        <img src="{% static 'images/cart.png' %}" alt=""/>
+                    </h3>
+                </a>
+                <p><a href="{% url 'clean_cart' %}" class="simpleCart_empty">清空购物车</a></p>
+
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+{% for fur in fur_list %}
+    <table>
+        <tr>
+            <th class="spec">宝贝评价</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td class="ring-in"><a href="{% url 'detail' %}?did={{ fur.id }}" class="at-in"><img src="{{ MEDIA_URL }}{{ fur.image_url_c }}" class="img-responsive" alt=""></a>
+            <td>{{ fur.name }}</td>
+            <td><a href="{%  url 'show_single_comm' %}?fid={{ fur.id }}&oid={{ oid }}">评价宝贝</a></td>
+        </tr>
+    {% empty %}
+        <li><h4>本订单所有宝贝已评价完成</h4></li></table><br><br><br><br><br><br>
+    <div align="center">
+        <a href="{% url 'finish_comm' %}?oid={{ oid }}"><img src="{% static 'images/index.png' %}" alt="返回"></a>
+        <p>返回上一页</p>
+    </div>
+{% endfor %}
+</table>
+</body>
+</html>
